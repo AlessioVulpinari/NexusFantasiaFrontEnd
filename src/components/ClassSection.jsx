@@ -1,8 +1,13 @@
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
+import { Alert } from "react-bootstrap"
 
 const ClassSection = () => {
   const params = useParams()
+
+  const [isError, setIsError] = useState(false)
+  const [errorMsg, setErrorMsg] = useState("")
+  const [aClass, setClass] = useState()
 
   const fetchClass = () => {
     fetch(`http://localhost:3001/api/classes/${params.classId}`, {
@@ -51,15 +56,30 @@ const ClassSection = () => {
       })
       .then((data) => {
         console.log(data)
+
+        setClass(data)
       })
       .catch((err) => {
         console.log(err)
+
+        setErrorMsg(err.name + " : " + err.message)
+        setIsError(true)
       })
   }
 
   useEffect(() => {
     fetchClass()
   }, [])
+
+  // Funzione per istanziare gli Alert di errore
+  const createAlert = (errorMsg) => {
+    return (
+      <Alert variant='danger'>
+        <Alert.Heading>WARNING!</Alert.Heading>
+        <p>{errorMsg}</p>
+      </Alert>
+    )
+  }
 
   return <></>
 }

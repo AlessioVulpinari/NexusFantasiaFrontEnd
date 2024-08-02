@@ -1,6 +1,10 @@
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 
 const RaceListSection = () => {
+  const [isError, setIsError] = useState(false)
+  const [errorMsg, setErrorMsg] = useState("")
+  const [races, setRaces] = useState()
+
   const fetchRaces = () => {
     fetch("http://localhost:3001/api/races", {
       headers: {
@@ -47,16 +51,32 @@ const RaceListSection = () => {
         }
       })
       .then((data) => {
-        console.log(data)
+        console.log(data.content)
+
+        setRaces(data.content)
       })
       .catch((err) => {
         console.log(err)
+
+        setErrorMsg(err.name + " : " + err.message)
+        setIsError(true)
       })
   }
 
   useEffect(() => {
     fetchRaces()
   }, [])
+
+  // Funzione per istanziare gli Alert di errore
+  const createAlert = (errorMsg) => {
+    return (
+      <Alert variant='danger'>
+        <Alert.Heading>WARNING!</Alert.Heading>
+        <p>{errorMsg}</p>
+      </Alert>
+    )
+  }
+
   return <></>
 }
 
