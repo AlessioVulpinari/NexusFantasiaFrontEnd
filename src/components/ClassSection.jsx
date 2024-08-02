@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
-import { Alert } from "react-bootstrap"
+import { Alert, Container, Table } from "react-bootstrap"
 
 const ClassSection = () => {
   const params = useParams()
@@ -81,7 +81,77 @@ const ClassSection = () => {
     )
   }
 
-  return <></>
+  return (
+    <>
+      {isError ? createAlert(errorMsg) : console.log("Nessun errore")}
+      {aClass && !isError && (
+        <Container>
+          <h1>{aClass.className} </h1>
+
+          {/* da aggiungere la descrizione della classe */}
+          <p> </p>
+          <Table responsive='sm'>
+            <thead>
+              <tr>
+                <th>Livello</th>
+                <th>Bonus competenza</th>
+                <th>Caratteristiche classe</th>
+              </tr>
+            </thead>
+            <tbody>
+              {aClass.classLevels.map((level) => (
+                <tr key={level.levelId}>
+                  <td>{level.levelNumber}</td>
+                  <td>{level.proficiencyBonus}</td>
+                  <td>
+                    {level.classFeatures.map((feature) => (
+                      <span key={feature.classFeatureId}>{feature.classFeatureName} , </span>
+                    ))}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </Table>
+
+          <h3>Punti vita:</h3>
+          <p>
+            <span>Dadi vita:</span> 1d{aClass.hitDice} per livello da {aClass.className}
+          </p>
+          <p>
+            <span>Punti vita al primo livello:</span> {aClass.hitDice} + il tuo modificare di Costituzione
+          </p>
+          <p>
+            <span>Punti vita a livelli maggiori:</span> 1d{aClass.hitDice} + il tuo modificare di Costituzione per livello da{" "}
+            {aClass.className}
+          </p>
+
+          <h3>Competenze:</h3>
+          <p>
+            {aClass.classProficiency.map((proficiency) => (
+              <span key={proficiency.proficiencyId}>{proficiency.name} ,</span>
+            ))}
+          </p>
+
+          <h3>Equipaggiamento iniziale:</h3>
+          {aClass.equipmentList.map((equipment) => (
+            <h5 key={equipment.equipmentId}>{equipment.name}</h5>
+          ))}
+
+          {aClass.classLevels.map((level) => (
+            <>
+              <p key={level.levelId}>{level.levelNumber}</p>
+              {level.classFeatures.map((feature) => (
+                <div key={feature.classFeatureId}>
+                  <p> {feature.classFeatureName} </p>
+                  <p> {feature.classFeatureDescription} </p>
+                </div>
+              ))}
+            </>
+          ))}
+        </Container>
+      )}
+    </>
+  )
 }
 
 export default ClassSection

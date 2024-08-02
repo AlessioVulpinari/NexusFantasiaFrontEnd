@@ -80,7 +80,7 @@ const RaceSection = () => {
     )
   }
 
-  return <></>
+  return <>{isError ? createAlert(errorMsg) : console.log("Nessun errore")}</>
 }
 
 export default RaceSection
