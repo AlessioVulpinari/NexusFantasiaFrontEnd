@@ -87,9 +87,7 @@ const ClassSection = () => {
       {aClass && !isError && (
         <Container>
           <h1>{aClass.className} </h1>
-
-          {/* da aggiungere la descrizione della classe */}
-          <p> </p>
+          <p>{aClass.description} </p>
           <Table responsive='sm'>
             <thead>
               <tr>
@@ -99,17 +97,19 @@ const ClassSection = () => {
               </tr>
             </thead>
             <tbody>
-              {aClass.classLevels.map((level) => (
-                <tr key={level.levelId}>
-                  <td>{level.levelNumber}</td>
-                  <td>{level.proficiencyBonus}</td>
-                  <td>
-                    {level.classFeatures.map((feature) => (
-                      <span key={feature.classFeatureId}>{feature.classFeatureName} , </span>
-                    ))}
-                  </td>
-                </tr>
-              ))}
+              {aClass.classLevels
+                .sort((a, b) => a.levelNumber - b.levelNumber)
+                .map((level) => (
+                  <tr key={level.levelId}>
+                    <td>{level.levelNumber}</td>
+                    <td>{level.proficiencyBonus}</td>
+                    <td>
+                      {level.classFeatures.map((feature) => (
+                        <span key={feature.classFeatureId}>{feature.classFeatureName}. </span>
+                      ))}
+                    </td>
+                  </tr>
+                ))}
             </tbody>
           </Table>
 
@@ -137,17 +137,19 @@ const ClassSection = () => {
             <h5 key={equipment.equipmentId}>{equipment.name}</h5>
           ))}
 
-          {aClass.classLevels.map((level) => (
-            <>
-              <p key={level.levelId}>{level.levelNumber}</p>
-              {level.classFeatures.map((feature) => (
-                <div key={feature.classFeatureId}>
-                  <p> {feature.classFeatureName} </p>
-                  <p> {feature.classFeatureDescription} </p>
-                </div>
-              ))}
-            </>
-          ))}
+          {aClass.classLevels
+            .filter((level) => level.classFeatures.length > 0)
+            .map((level) => (
+              <>
+                <p key={level.levelId}>Livello {level.levelNumber}</p>
+                {level.classFeatures.map((feature) => (
+                  <div key={feature.classFeatureId}>
+                    <p> {feature.classFeatureName} </p>
+                    <p> {feature.classFeatureDescription} </p>
+                  </div>
+                ))}
+              </>
+            ))}
         </Container>
       )}
     </>
