@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react"
-import { Alert } from "react-bootstrap"
+import { Alert, Button, Card, Container } from "react-bootstrap"
+import { useNavigate } from "react-router-dom"
 
 const ClassListSection = () => {
   const [isError, setIsError] = useState(false)
   const [errorMsg, setErrorMsg] = useState("")
   const [classes, setClasses] = useState()
+  const navigate = useNavigate()
 
   const fetchClass = () => {
     fetch("http://localhost:3001/api/classes", {
@@ -78,7 +80,27 @@ const ClassListSection = () => {
     )
   }
 
-  return <></>
+  return (
+    <>
+      {isError ? createAlert(errorMsg) : console.log("Nessun errore")}
+      {classes && !isError && (
+        <Container>
+          <h1>Lista Classi:</h1>
+          {classes.map((aClass) => (
+            <Card key={aClass.classId}>
+              <Card.Body>
+                <Card.Title>{aClass.className}</Card.Title>
+                <Card.Text>Clicca qui sotto per scoprire tutte le informazioni su questa classe!</Card.Text>
+                <Button variant='primary' onClick={() => navigate(`/class-detail/${aClass.classId}`)}>
+                  Vai alla classe!
+                </Button>
+              </Card.Body>
+            </Card>
+          ))}
+        </Container>
+      )}
+    </>
+  )
 }
 
 export default ClassListSection

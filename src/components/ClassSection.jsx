@@ -85,7 +85,7 @@ const ClassSection = () => {
     <>
       {isError ? createAlert(errorMsg) : console.log("Nessun errore")}
       {aClass && !isError && (
-        <Container>
+        <Container className='mt-3'>
           <h1>{aClass.className} </h1>
           <p>{aClass.description} </p>
           <Table responsive='sm'>
@@ -102,7 +102,7 @@ const ClassSection = () => {
                 .map((level) => (
                   <tr key={level.levelId}>
                     <td>{level.levelNumber}</td>
-                    <td>{level.proficiencyBonus}</td>
+                    <td>+{level.proficiencyBonus}</td>
                     <td>
                       {level.classFeatures.map((feature) => (
                         <span key={feature.classFeatureId}>{feature.classFeatureName}. </span>
@@ -115,36 +115,38 @@ const ClassSection = () => {
 
           <h3>Punti vita:</h3>
           <p>
-            <span>Dadi vita:</span> 1d{aClass.hitDice} per livello da {aClass.className}
+            <span>Dadi vita:</span> 1d{aClass.hitDice} per livello da {aClass.className}.
           </p>
           <p>
-            <span>Punti vita al primo livello:</span> {aClass.hitDice} + il tuo modificare di Costituzione
+            <span>Punti vita al primo livello:</span> {aClass.hitDice} + il tuo modificare di Costituzione.
           </p>
           <p>
             <span>Punti vita a livelli maggiori:</span> 1d{aClass.hitDice} + il tuo modificare di Costituzione per livello da{" "}
-            {aClass.className}
+            {aClass.className}.
           </p>
 
           <h3>Competenze:</h3>
           <p>
             {aClass.classProficiency.map((proficiency) => (
-              <span key={proficiency.proficiencyId}>{proficiency.name} ,</span>
+              <span key={proficiency.proficiencyId}> - {proficiency.name}</span>
             ))}
           </p>
 
           <h3>Equipaggiamento iniziale:</h3>
-          {aClass.equipmentList.map((equipment) => (
-            <h5 key={equipment.equipmentId}>{equipment.name}</h5>
-          ))}
+          <p>
+            {aClass.equipmentList.map((equipment) => (
+              <span key={equipment.equipmentId}>- {equipment.name} </span>
+            ))}
+          </p>
 
           {aClass.classLevels
             .filter((level) => level.classFeatures.length > 0)
             .map((level) => (
               <>
-                <p key={level.levelId}>Livello {level.levelNumber}</p>
+                <h4 key={level.levelId}>Livello {level.levelNumber}</h4>
                 {level.classFeatures.map((feature) => (
                   <div key={feature.classFeatureId}>
-                    <p> {feature.classFeatureName} </p>
+                    <h6> {feature.classFeatureName} </h6>
                     <p> {feature.classFeatureDescription} </p>
                   </div>
                 ))}

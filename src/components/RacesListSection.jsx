@@ -1,9 +1,12 @@
 import { useEffect, useState } from "react"
+import { Alert, Button, Card, Container } from "react-bootstrap"
+import { useNavigate } from "react-router-dom"
 
 const RaceListSection = () => {
   const [isError, setIsError] = useState(false)
   const [errorMsg, setErrorMsg] = useState("")
   const [races, setRaces] = useState()
+  const navigate = useNavigate()
 
   const fetchRaces = () => {
     fetch("http://localhost:3001/api/races", {
@@ -77,7 +80,27 @@ const RaceListSection = () => {
     )
   }
 
-  return <></>
+  return (
+    <>
+      {isError ? createAlert(errorMsg) : console.log("Nessun errore")}
+      {races && !isError && (
+        <Container>
+          <h1>Lista Razze:</h1>
+          {races.map((race) => (
+            <Card key={race.raceId}>
+              <Card.Body>
+                <Card.Title>{race.name}</Card.Title>
+                <Card.Text>Clicca qui sotto per scoprire tutte le informazioni su questa razza!</Card.Text>
+                <Button variant='primary' onClick={() => navigate(`/race-detail/${race.raceId}`)}>
+                  Vai alla razza!
+                </Button>
+              </Card.Body>
+            </Card>
+          ))}
+        </Container>
+      )}
+    </>
+  )
 }
 
 export default RaceListSection
