@@ -9,7 +9,7 @@ const RaceSection = () => {
   const params = useParams()
 
   const fetchARace = () => {
-    fetch(`http://localhost:3001/api/classes/${params.raceId}`, {
+    fetch(`http://localhost:3001/api/races/${params.raceId}`, {
       headers: {
         Authorization:
           "Bearer eyJhbGciOiJIUzM4NCJ9.eyJpYXQiOjE3MjI2MDUxNTcsImV4cCI6MTcyMzIwOTk1Nywic3ViIjoiY2Q4MmNlZGUtMmJmMC00MWIzLThlZDEtZTdhOTdiODVhZjA4In0.ltL10zyALqFZ3rse-vVs34Zjl5dyggATz9MT6mSajqJBs8BhFg5-Y9l_NWKEvseL",
@@ -102,9 +102,11 @@ const RaceSection = () => {
 
           <h3>Competenze</h3>
           <p>
-            {race.proficiencies.map((proficiency) => (
-              <span key={proficiency.proficiencyId}> - {proficiency.name}</span>
-            ))}
+            {!race.proficiencies || race.proficiencies.length === 0 ? (
+              <span>Nessuna competenza di razza disponibile.</span>
+            ) : (
+              race.proficiencies.map((proficiency) => <span key={proficiency.proficiencyId}> - {proficiency.name}</span>)
+            )}
           </p>
 
           {race.racialTraits.map((trait) => (

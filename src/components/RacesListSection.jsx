@@ -86,17 +86,20 @@ const RaceListSection = () => {
       {races && !isError && (
         <Container>
           <h1>Lista Razze:</h1>
-          {races.map((race) => (
-            <Card key={race.raceId}>
-              <Card.Body>
-                <Card.Title>{race.name}</Card.Title>
-                <Card.Text>Clicca qui sotto per scoprire tutte le informazioni su questa razza!</Card.Text>
-                <Button variant='primary' onClick={() => navigate(`/race-detail/${race.raceId}`)}>
-                  Vai alla razza!
-                </Button>
-              </Card.Body>
-            </Card>
-          ))}
+          {races
+            .slice() // Crea una copia dell'array per non mutare l'array originale
+            .sort((a, b) => a.name.localeCompare(b.name)) // Ordina le razze per nome
+            .map((race) => (
+              <Card key={race.raceId} className='my-2'>
+                <Card.Body>
+                  <Card.Title>{race.name}</Card.Title>
+                  <Card.Text>Clicca qui sotto per scoprire tutte le informazioni su questa razza!</Card.Text>
+                  <Button variant='primary' onClick={() => navigate(`/race-detail/${race.raceId}`)}>
+                    Vai alla razza!
+                  </Button>
+                </Card.Body>
+              </Card>
+            ))}
         </Container>
       )}
     </>
