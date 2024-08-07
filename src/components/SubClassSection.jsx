@@ -1,15 +1,15 @@
 import { useEffect, useState } from "react"
-import { Alert, Button, Card, Container } from "react-bootstrap"
-import { useNavigate } from "react-router-dom"
+import { Alert, Container } from "react-bootstrap"
+import { useParams } from "react-router-dom"
 
-const ClassListSection = () => {
+const SubClassSection = () => {
+  const params = useParams()
   const [isError, setIsError] = useState(false)
   const [errorMsg, setErrorMsg] = useState("")
-  const [classes, setClasses] = useState()
-  const navigate = useNavigate()
+  const [aClass, setClass] = useState()
 
   const fetchClass = () => {
-    fetch("http://localhost:3001/api/classes", {
+    fetch(`http://localhost:3001/api/subclasses/${params.subclassId}`, {
       headers: {
         Authorization:
           "Bearer eyJhbGciOiJIUzM4NCJ9.eyJpYXQiOjE3MjI2MDUxNTcsImV4cCI6MTcyMzIwOTk1Nywic3ViIjoiY2Q4MmNlZGUtMmJmMC00MWIzLThlZDEtZTdhOTdiODVhZjA4In0.ltL10zyALqFZ3rse-vVs34Zjl5dyggATz9MT6mSajqJBs8BhFg5-Y9l_NWKEvseL",
@@ -54,9 +54,9 @@ const ClassListSection = () => {
         }
       })
       .then((data) => {
-        console.log(data.content)
+        console.log(data)
 
-        setClasses(data.content)
+        setClass(data)
       })
       .catch((err) => {
         console.log(err)
@@ -83,24 +83,26 @@ const ClassListSection = () => {
   return (
     <>
       {isError ? createAlert(errorMsg) : console.log("Nessun errore")}
-      {classes && !isError && (
-        <Container>
-          <h1>Lista Classi:</h1>
-          {classes.map((aClass) => (
-            <Card key={aClass.classId} className='my-2'>
-              <Card.Body>
-                <Card.Title>{aClass.className}</Card.Title>
-                <Card.Text>Clicca qui sotto per scoprire tutte le informazioni su questa classe!</Card.Text>
-                <Button variant='primary' onClick={() => navigate(`/class-detail/${aClass.classId}`)}>
-                  Vai alla classe!
-                </Button>
-              </Card.Body>
-            </Card>
-          ))}
+      {aClass && !isError && (
+        <Container className='my-3'>
+          <h1>{aClass.name}</h1>
+          <p>{aClass.description} </p>
+
+          {aClass.subClassLevels
+            .sort((a, b) => a.levelNumber - b.levelNumber) // Ordina l'array per levelNumber
+            .map((level) => (
+              <div key={level.subclassLevelId}>
+                <h4>Livello: {level.levelNumber}</h4>
+                <div>
+                  <h6> {level.classFeature.classFeatureName} </h6>
+                  <p> {level.classFeature.classFeatureDescription} </p>
+                </div>
+              </div>
+            ))}
         </Container>
       )}
     </>
   )
 }
 
-export default ClassListSection
+export default SubClassSection

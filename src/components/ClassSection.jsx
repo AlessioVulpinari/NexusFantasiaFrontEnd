@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
-import { Alert, Container, Table } from "react-bootstrap"
+import { Alert, Badge, Container, Table } from "react-bootstrap"
+import { NavLink } from "react-router-dom"
 
 const ClassSection = () => {
   const params = useParams()
@@ -85,7 +86,7 @@ const ClassSection = () => {
     <>
       {isError ? createAlert(errorMsg) : console.log("Nessun errore")}
       {aClass && !isError && (
-        <Container className='mt-3'>
+        <Container key={aClass.classId} className='my-3'>
           <h1>{aClass.className} </h1>
           <p>{aClass.description} </p>
           <Table responsive='sm'>
@@ -126,32 +127,164 @@ const ClassSection = () => {
           </p>
 
           <h3>Competenze:</h3>
+
+          <h6>Tiri salvezza:</h6>
           <p>
-            {aClass.classProficiency.map((proficiency) => (
-              <span key={proficiency.proficiencyId}> - {proficiency.name}</span>
-            ))}
+            {aClass.classProficiency ? (
+              aClass.classProficiency
+                .filter((proficiency) => proficiency.proficiencyType === "SAVING_TROWS")
+                .sort((a, b) => a.name.localeCompare(b.name)).length > 0 ? (
+                aClass.classProficiency
+                  .filter((proficiency) => proficiency.proficiencyType === "SAVING_TROWS")
+                  .sort((a, b) => a.name.localeCompare(b.name))
+                  .map((proficiency) => (
+                    <Badge className='me-2' pill bg='danger' key={proficiency.proficiencyId}>
+                      {proficiency.name}
+                    </Badge>
+                  ))
+              ) : (
+                <span>Nessuna competenza</span>
+              )
+            ) : (
+              <span>Nessuna competenza</span>
+            )}
+          </p>
+
+          <h6>Abilità:</h6>
+          <p>
+            {aClass.classProficiency ? (
+              aClass.classProficiency
+                .filter((proficiency) => proficiency.proficiencyType === "SKILLS")
+                .sort((a, b) => a.name.localeCompare(b.name)).length > 0 ? (
+                aClass.classProficiency
+                  .filter((proficiency) => proficiency.proficiencyType === "SKILLS")
+                  .sort((a, b) => a.name.localeCompare(b.name))
+                  .map((proficiency) => (
+                    <Badge className='me-2' pill bg='danger' key={proficiency.proficiencyId}>
+                      {proficiency.name}
+                    </Badge>
+                  ))
+              ) : (
+                <span>Nessuna competenza</span>
+              )
+            ) : (
+              <span>Nessuna competenza</span>
+            )}
+          </p>
+
+          <h6>Armature:</h6>
+          <p>
+            {aClass.classProficiency ? (
+              aClass.classProficiency
+                .filter((proficiency) => proficiency.proficiencyType === "ARMOR")
+                .sort((a, b) => a.name.localeCompare(b.name)).length > 0 ? (
+                aClass.classProficiency
+                  .filter((proficiency) => proficiency.proficiencyType === "ARMOR")
+                  .sort((a, b) => a.name.localeCompare(b.name))
+                  .map((proficiency) => (
+                    <Badge className='me-2' pill bg='danger' key={proficiency.proficiencyId}>
+                      {proficiency.name}
+                    </Badge>
+                  ))
+              ) : (
+                <span>Nessuna competenza</span>
+              )
+            ) : (
+              <span>Nessuna competenza</span>
+            )}
+          </p>
+
+          <h6>Armi:</h6>
+          <p>
+            {aClass.classProficiency ? (
+              aClass.classProficiency
+                .filter((proficiency) => proficiency.proficiencyType === "WEAPONS")
+                .sort((a, b) => a.name.localeCompare(b.name)).length > 0 ? (
+                aClass.classProficiency
+                  .filter((proficiency) => proficiency.proficiencyType === "WEAPONS")
+                  .sort((a, b) => a.name.localeCompare(b.name))
+                  .map((proficiency) => (
+                    <Badge className='me-2' pill bg='danger' key={proficiency.proficiencyId}>
+                      {proficiency.name}
+                    </Badge>
+                  ))
+              ) : (
+                <span>Nessuna competenza</span>
+              )
+            ) : (
+              <span>Nessuna competenza</span>
+            )}
           </p>
 
           <h3>Equipaggiamento iniziale:</h3>
+
+          <h6>Armi:</h6>
+
           <p>
-            {aClass.equipmentList.map((equipment) => (
-              <span key={equipment.equipmentId}>- {equipment.name} </span>
-            ))}
+            {aClass.equipmentList.filter((equipment) => equipment.damageType !== null).length === 0
+              ? "Nessun oggetto."
+              : aClass.equipmentList
+                  .filter((equipment) => equipment.damageType !== null && equipment.damageType !== undefined)
+                  .map((equipment) => (
+                    <Badge key={equipment.equipmentId} className='me-2' pill bg='danger'>
+                      {equipment.name}
+                    </Badge>
+                  ))}
+          </p>
+
+          <h6>Armature e scudi:</h6>
+          <p>
+            {aClass.equipmentList.filter((equipment) => equipment.armorClass !== null && equipment.armorClass !== undefined)
+              .length === 0
+              ? "Nessun oggetto."
+              : aClass.equipmentList
+                  .filter(
+                    (equipment) =>
+                      equipment.armorClass !== null &&
+                      equipment.armorClass !== undefined &&
+                      equipment.damageType == undefined &&
+                      equipment.armorClass !== null
+                  )
+                  .map((equipment) => (
+                    <Badge key={equipment.equipmentId} className='me-2' pill bg='danger'>
+                      {equipment.name}
+                    </Badge>
+                  ))}
+          </p>
+
+          <h6>Altro:</h6>
+          <p>
+            {aClass.equipmentList.filter((equipment) => equipment.armorClass == null && equipment.damageType == null).length === 0
+              ? "Nessun oggetto."
+              : aClass.equipmentList
+                  .filter((equipment) => equipment.armorClass == null && equipment.damageType == null)
+                  .map((equipment) => (
+                    <Badge key={equipment.equipmentId} className='me-2' pill bg='danger'>
+                      {equipment.name}
+                    </Badge>
+                  ))}
           </p>
 
           {aClass.classLevels
             .filter((level) => level.classFeatures.length > 0)
             .map((level) => (
-              <>
-                <h4 key={level.levelId}>Livello {level.levelNumber}</h4>
+              <div key={level.levelId}>
+                <h4>Livello {level.levelNumber}</h4>
                 {level.classFeatures.map((feature) => (
                   <div key={feature.classFeatureId}>
                     <h6> {feature.classFeatureName} </h6>
                     <p> {feature.classFeatureDescription} </p>
                   </div>
                 ))}
-              </>
+              </div>
             ))}
+
+          <h3>Sottoclassi:</h3>
+          {aClass.subclassSet.map((subclass) => (
+            <NavLink className={"d-block mt-2 mb-3"} to={`/subclass-detail/${subclass.subclassId}`} key={subclass.subclassId}>
+              {subclass.name}
+            </NavLink>
+          ))}
         </Container>
       )}
     </>

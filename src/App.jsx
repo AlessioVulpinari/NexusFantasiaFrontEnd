@@ -8,6 +8,7 @@ import ClassSection from "./components/ClassSection"
 import RaceListSection from "./components/RacesListSection"
 import RaceSection from "./components/RaceSection"
 import MyFooter from "./components/MyFooter"
+import SubClassSection from "./components/SubClassSection"
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
           <Route path='/class-detail/:classId' element={<ClassSection />}></Route>
           <Route path='/races' element={<RaceListSection />}></Route>
           <Route path='/race-detail/:raceId' element={<RaceSection />}></Route>
+          <Route path='/subclass-detail/:subclassId' element={<SubClassSection />}></Route>
         </Routes>
         <MyFooter />
       </BrowserRouter>
