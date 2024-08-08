@@ -8,7 +8,7 @@ const ClassSection = () => {
 
   const [isError, setIsError] = useState(false)
   const [errorMsg, setErrorMsg] = useState("")
-  const [aClass, setClass] = useState()
+  const [aClass, setClass] = useState(null)
 
   const fetchClass = () => {
     fetch(`http://localhost:3001/api/classes/${params.classId}`, {
@@ -82,6 +82,41 @@ const ClassSection = () => {
     )
   }
 
+  const shouldShowMagicColumns =
+    aClass &&
+    aClass.classLevels &&
+    aClass.classLevels.length > 0 &&
+    aClass.classLevels[0].fistSlotSpell !== null &&
+    aClass.classLevels[0].fistSlotSpell !== undefined
+
+  const shouldShowSorceryPointsColumn =
+    aClass &&
+    aClass.classLevels &&
+    aClass.classLevels.length > 0 &&
+    aClass.classLevels[0].sorceryPoints !== null &&
+    aClass.classLevels[0].sorceryPoints !== undefined
+
+  const shouldShowWarlockColumn =
+    aClass &&
+    aClass.classLevels &&
+    aClass.classLevels.length > 0 &&
+    aClass.classLevels[0].invocationsKnown !== null &&
+    aClass.classLevels[0].invocationsKnown !== undefined
+
+  const shouldShowRogueColumn =
+    aClass &&
+    aClass.classLevels &&
+    aClass.classLevels.length > 0 &&
+    aClass.classLevels[0].sneakAttackNumberDice !== null &&
+    aClass.classLevels[0].sneakAttackNumberDice !== undefined
+
+  const shouldShowMonkColumn =
+    aClass &&
+    aClass.classLevels &&
+    aClass.classLevels.length > 0 &&
+    aClass.classLevels[0].kiPoints !== null &&
+    aClass.classLevels[0].kiPoints !== undefined
+
   return (
     <>
       {isError ? createAlert(errorMsg) : console.log("Nessun errore")}
@@ -89,12 +124,71 @@ const ClassSection = () => {
         <Container key={aClass.classId} className='my-3'>
           <h1>{aClass.className} </h1>
           <p>{aClass.description} </p>
-          <Table responsive='sm'>
+          <Table responsive='lg'>
             <thead>
               <tr>
                 <th>Livello</th>
                 <th>Bonus competenza</th>
                 <th>Caratteristiche classe</th>
+
+                {shouldShowMagicColumns && (
+                  <>
+                    {aClass.classLevels[19].cantripsKnown !== 0 && (
+                      <>
+                        <th>Trucchetti conosciuti</th>
+                      </>
+                    )}
+
+                    {aClass.classLevels[19].spellsKnown !== 0 && (
+                      <>
+                        <th>Magie conosciute</th>
+                      </>
+                    )}
+                    <th>1°</th>
+                    <th>2°</th>
+                    <th>3°</th>
+                    <th>4°</th>
+                    <th>5°</th>
+                    {aClass.classLevels[19].ninthSlotSpell !== 0 && (
+                      <>
+                        <th>6°</th>
+                        <th>7°</th>
+                        <th>8°</th>
+                        <th>9°</th>
+                      </>
+                    )}
+                  </>
+                )}
+
+                {shouldShowSorceryPointsColumn && (
+                  <>
+                    <th>Punti Stregoneria</th>
+                  </>
+                )}
+
+                {shouldShowRogueColumn && (
+                  <>
+                    <th>Attacco Furtivo </th>
+                  </>
+                )}
+
+                {shouldShowWarlockColumn && (
+                  <>
+                    <th>Trucchetti conosciuti</th>
+                    <th>Magie conosciute</th>
+                    <th>Slot incantesimo</th>
+                    <th>Livello di Slot</th>
+                    <th>Supplice Conosciute</th>
+                  </>
+                )}
+
+                {shouldShowMonkColumn && (
+                  <>
+                    <th>Arti Marziali</th>
+                    <th>Punti Ki</th>
+                    <th>Movimento Senza Armatura</th>
+                  </>
+                )}
               </tr>
             </thead>
             <tbody>
@@ -109,6 +203,68 @@ const ClassSection = () => {
                         <span key={feature.classFeatureId}>{feature.classFeatureName}. </span>
                       ))}
                     </td>
+                    {shouldShowMagicColumns && (
+                      <>
+                        {aClass.classLevels[19].cantripsKnown !== 0 && (
+                          <>
+                            <td>{level.cantripsKnown}</td>
+                          </>
+                        )}
+
+                        {aClass.classLevels[19].spellsKnown !== 0 && (
+                          <>
+                            <td>{level.spellsKnown}</td>
+                          </>
+                        )}
+
+                        <td>{level.fistSlotSpell}</td>
+                        <td>{level.secondSlotSpell}</td>
+                        <td>{level.thirdSlotSpell}</td>
+                        <td>{level.fourthSlotSpell}</td>
+                        <td>{level.fifthSlotSpell}</td>
+
+                        {aClass.classLevels[19].ninthSlotSpell !== 0 && (
+                          <>
+                            <td>{level.sixthSlotSpell}</td>
+                            <td>{level.seventhSlotSpell}</td>
+                            <td>{level.eighthSlotSpell}</td>
+                            <td>{level.ninthSlotSpell}</td>
+                          </>
+                        )}
+                      </>
+                    )}
+
+                    {shouldShowSorceryPointsColumn && (
+                      <>
+                        <td>{level.sorceryPoints}</td>
+                      </>
+                    )}
+
+                    {shouldShowRogueColumn && (
+                      <>
+                        <td>
+                          {level.sneakAttackNumberDice}d{level.sneakAttackDamageDice}
+                        </td>
+                      </>
+                    )}
+
+                    {shouldShowWarlockColumn && (
+                      <>
+                        <td>{level.cantripsKnown}</td>
+                        <td>{level.spellsKnown}</td>
+                        <td>{level.spellSlots}</td>
+                        <td>{level.slotLevel}°</td>
+                        <td>{level.invocationsKnown}</td>
+                      </>
+                    )}
+
+                    {shouldShowMonkColumn && (
+                      <>
+                        <td>1d{level.martialArt}</td>
+                        <td>{level.kiPoints}</td>
+                        <td>+{level.unarmedMovement} m</td>
+                      </>
+                    )}
                   </tr>
                 ))}
             </tbody>
